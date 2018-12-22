@@ -1,0 +1,33 @@
+{
+  "name": "rename",
+  "version": "1.0.0",
+  "description": "App Description",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "tsc",
+    "lint": "tslint",
+    "run": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "fs-extra": "^7.0.1",
+    "ramda": "^0.26.1"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/fs-extra": "^5.0.4",
+    "@types/jest": "^23.3.10",
+    "@types/node": "^10.12.15",
+    "@types/ramda": "^0.25.45",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.2.2"
+  }
+}
