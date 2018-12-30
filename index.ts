@@ -12,22 +12,34 @@ commander
     "Array of transformations to be applied in order",
     "[]"
   )
+  .option("-R, --recursive", "Perform recursive rename")
   .parse(process.argv);
 
-const { match, flags, replace, transformations } = commander;
+const { match, flags, replace, transformations, recursive } = commander;
 
 const transformationsArray = JSON.parse(transformations);
 
 const currentDirectory = process.cwd();
 
-fs.readdirSync(currentDirectory).forEach(node =>
+const rename = (currentDirectory: string) => (node: string) =>
   fs.rename(
     `${currentDirectory}/${node}`,
     `${currentDirectory}/${node.replace(
       new RegExp(match, flags),
-      transformationsArray.length
-        ? transform(replace)(transformationsArray)
-        : replace
+      transform(replace)(transformationsArray)
     )}`
-  )
+  );
+
+const renameRecursively = (currentDirectory: string) => (node: string) => {
+  const fullPathToNode = `${currentDirectory}/${node}`;
+
+  if (fs.lstatSync(fullPathToNode).isDirectory()) {
+    fs.readdirSync(fullPathToNode).forEach(renameRecursively(fullPathToNode));
+  } else {
+    rename(currentDirectory)(node);
+  }
+};
+
+fs.readdirSync(currentDirectory).forEach(
+  recursive ? renameRecursively(currentDirectory) : rename(currentDirectory)
 );
