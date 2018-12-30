@@ -20,8 +20,8 @@ const transform = (replacement: string) => (transformations: Array<string>) => (
       if (match) {
         return match;
       } else {
-        throw new Error(`Replacement pattern '${replacement}' uses at least one group which was not captured
-Captured groups are '${matches}'`);
+        throw new Error(`Replacement pattern '${replacement}' uses at least one group more than the number of captured groups
+Where captured groups are '${matches}'`);
       }
     });
 };
