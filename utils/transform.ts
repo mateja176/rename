@@ -1,20 +1,29 @@
-const transform = (replacement: string) => (transformations: string) => (
-  ...matches: Array<string>
+const transform = (replacement: string) => (transformations: Array<string>) => (
+  ...config: Array<string>
 ) => {
-  const transformedArray = matches.map((match, i) => {
-    const transformation = transformations[i];
-    return transformation ? match[transformation]() : match;
-  });
+  const [offset, string] = config.slice(-2);
 
-  return replacement.replace("$&", "$0").replace(/\$(\w)/g, (_, i) => {
-    const t = transformedArray[i];
-    if (t) {
-      return t;
-    } else {
-      throw new Error(`Captured groups '${matches}'
-Whilst replacement pattern '${replacement}' uses at least one group outside the matches`);
-    }
-  });
+  const matches = config.slice(0, -2);
+
+  const transformedMatches = transformations.map((transformation, i) =>
+    matches[i][transformation]()
+  );
+
+  const allMatches = transformedMatches.concat(
+    matches.slice(transformedMatches.length)
+  );
+
+  return replacement
+    .replace(/\$&/g, string)
+    .replace(/\$(\d)/g, (_, groupNumber) => {
+      const match = allMatches[groupNumber];
+      if (match) {
+        return match;
+      } else {
+        throw new Error(`Replacement pattern '${replacement}' uses at least one group which was not captured
+Captured groups are '${matches}'`);
+      }
+    });
 };
 
 export default transform;
