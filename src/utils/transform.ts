@@ -4,7 +4,7 @@ import { Transformations } from "../models/transformation";
 const transform = (replacement: string) => (
   transformations: Transformations,
 ) => (match: string, ...config: string[]) => {
-  const [, wholeString] = config.slice(-2);
+  const [wholeString] = config.slice(-1);
 
   const matches = config.slice(0, -2);
 
