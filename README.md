@@ -27,3 +27,28 @@ rename --match '(.+).js' --replace '$1.ts' --recursive
 ```sh
 rename --match '(.+).ts' --replace '$1.js' --recursive
 ```
+## Transformers
+
+### Available transformers
+
+```ts
+"toUpperCase" | "toLowerCase" | "trim" | "trimLeft" | "trimRight"
+```
+
+### Examples
+
+#### Trimming file names
+
+```sh
+rename --transformations trim
+```
+
+```sh
+rename --match '(.+)(\.ts)' --replace '$1$2' --transformations trim,slice
+```
+
+#### Lower casing file name
+
+```sh
+rename --transformations toLowerCase,slice
+```
