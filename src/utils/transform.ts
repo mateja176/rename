@@ -1,3 +1,4 @@
+import { zip } from "ramda";
 import { Transformations } from "../models/transformation";
 
 const transform = (replacement: string) => (
@@ -7,11 +8,16 @@ const transform = (replacement: string) => (
 
   const matches = config.slice(0, -2);
 
+  const transformedMatches = zip(matches, transformations).map(
+    ([match, transformation]) => match[transformation](),
+  );
+
   const replacementResult = replacement
-    .replace(/\$&/g, match)
     .replace(/\$0/g, wholeString)
-    .replace(/(?=\$)\d/g, groupNumber => {
-      const match = matches[groupNumber];
+    .replace(/\$&/g, match)
+    .replace(/\$(\d)/g, (_, groupNumber) => {
+      const match = transformedMatches[groupNumber - 1];
+
       if (match) {
         return match;
       } else {
@@ -23,10 +29,7 @@ Captured groups '${matches}'`);
       }
     });
 
-  return transformations.reduce(
-    (result, transformation) => result[transformation](),
-    replacementResult,
-  );
+  return replacementResult;
 };
 
 export default transform;
