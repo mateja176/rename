@@ -1,16 +1,18 @@
-const transform = (replacement: string) => (transformations: Array<string>) => (
-  ...config: Array<string>
-) => {
+const transform = (replacement: string) => (
+  transformations: Array<
+    "toUpperCase" | "toLowerCase" | "trim" | "trimLeft" | "trimRight"
+  >,
+) => (...config: Array<string>) => {
   const [offset, string] = config.slice(-2);
 
   const matches = config.slice(0, -2);
 
   const transformedMatches = transformations.map((transformation, i) =>
-    matches[i][transformation]()
+    matches[i][transformation](),
   );
 
   const allMatches = transformedMatches.concat(
-    matches.slice(transformedMatches.length)
+    matches.slice(transformedMatches.length),
   );
 
   return replacement
