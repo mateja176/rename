@@ -1,31 +1,32 @@
+import { Transformations } from "../models/transformation";
+
 const transform = (replacement: string) => (
-  transformations: Array<
-    "toUpperCase" | "toLowerCase" | "trim" | "trimLeft" | "trimRight"
-  >,
-) => (...config: Array<string>) => {
-  const [offset, string] = config.slice(-2);
+  transformations: Transformations,
+) => (match: string, ...config: string[]) => {
+  const [, wholeString] = config.slice(-2);
 
   const matches = config.slice(0, -2);
 
-  const transformedMatches = transformations.map((transformation, i) =>
-    matches[i][transformation](),
-  );
-
-  const allMatches = transformedMatches.concat(
-    matches.slice(transformedMatches.length),
-  );
-
-  return replacement
-    .replace(/\$&/g, string)
-    .replace(/\$(\d)/g, (_, groupNumber) => {
-      const match = allMatches[groupNumber];
+  const replacementResult = replacement
+    .replace(/\$&/g, match)
+    .replace(/\$0/g, wholeString)
+    .replace(/(?=\$)\d/g, groupNumber => {
+      const match = matches[groupNumber];
       if (match) {
         return match;
       } else {
-        throw new Error(`Replacement pattern '${replacement}' uses at least one group more than the number of captured groups
-Where captured groups are '${matches}'`);
+        throw new Error(`'${groupNumber}' does not represent a captured group number from 1 to '${
+          matches.length
+        }'
+Replacement pattern '${replacement}'
+Captured groups '${matches}'`);
       }
     });
+
+  return transformations.reduce(
+    (result, transformation) => result[transformation](),
+    replacementResult,
+  );
 };
 
 export default transform;

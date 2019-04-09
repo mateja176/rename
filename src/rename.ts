@@ -1,9 +1,12 @@
 #!/usr/bin/env ts-node
 
-// fs throws when node types are unavailable in the current directory
-import * as fs from "fs-extra";
 import * as commander from "commander";
+import * as fs from "fs-extra"; // fs throws when node types are unavailable in the current directory
+import { Transformations } from "./models/transformation";
 import transform from "./utils/transform";
+
+const parseTransformations = (transformations: string) =>
+  transformations.split(",") as Transformations;
 
 commander
   .option("-m, --match <pattern>", "Pattern to match against", ".+")
@@ -12,14 +15,12 @@ commander
   .option(
     "-t, --transformations <array>",
     "Array of transformations to be applied in order",
-    "[]"
+    parseTransformations,
   )
   .option("-R, --recursive", "Perform recursive rename")
   .parse(process.argv);
 
 const { match, flags, replace, transformations, recursive } = commander;
-
-const transformationsArray = JSON.parse(transformations);
 
 const currentDirectory = process.cwd();
 
@@ -28,8 +29,8 @@ const rename = (currentDirectory: string) => (node: string) =>
     `${currentDirectory}/${node}`,
     `${currentDirectory}/${node.replace(
       new RegExp(match, flags),
-      transform(replace)(transformationsArray)
-    )}`
+      transform(replace)(transformations),
+    )}`,
   );
 
 const renameRecursively = (currentDirectory: string) => (node: string) => {
@@ -43,5 +44,5 @@ const renameRecursively = (currentDirectory: string) => (node: string) => {
 };
 
 fs.readdirSync(currentDirectory).forEach(
-  recursive ? renameRecursively(currentDirectory) : rename(currentDirectory)
+  recursive ? renameRecursively(currentDirectory) : rename(currentDirectory),
 );
