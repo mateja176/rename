@@ -47,7 +47,7 @@ rename --transformations trim
 rename --match '(.+)(\.ts)' --replace '$1$2' --transformations trim,slice
 ```
 
-#### Lower casing file name
+#### Lower casing file names
 
 ```sh
 rename --transformations toLowerCase,slice
