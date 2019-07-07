@@ -22,13 +22,15 @@ rename --path src --find '(.+)\.js' --replace '$1.ts' --recursive
 
 _Be careful when using the `--recursive` flag. It can affect many assets at once and you may find it difficult if not impossible to undo a recursive rename in cases where the rename was informationally destructive_
 
-## Transformers
+## Transformations
 
-### Available transformers
+### Available Transformations
 
 ```ts
 'toUpperCase' | 'toLowerCase' | 'trim' | 'trimLeft' | 'trimRight';
 ```
+
+### Examples with Transformations
 
 #### Trimming file names
 
