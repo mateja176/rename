@@ -1,6 +1,6 @@
 # Rename
 
-🖉 Script for renaming and recursively renaming files and folders
+✏️ Script for renaming and recursively renaming files and folders
 
 ## To do
 
