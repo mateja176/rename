@@ -1,5 +1,5 @@
-import { zip } from "ramda";
-import { Transformations } from "../models/transformation";
+import { zip } from 'ramda';
+import { Transformations } from '../models';
 
 const transform = (replacement: string) => (
   transformations: Transformations,

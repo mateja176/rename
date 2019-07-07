@@ -1,18 +1,18 @@
 // fs throws when node types are unavailable in the current directory
-import * as commander from "commander";
-import * as fs from "fs-extra";
-import transform from "./utils/transform";
+import * as commander from 'commander';
+import * as fs from 'fs-extra';
+import { transform } from './utils';
 
 commander
-  .option("-m, --match <pattern>", "Pattern to match against", ".+")
-  .option("-f, --flags <flags>", "Pattern to match against", "")
-  .option("-r, --replace <pattern>", "Replacement pattern", "$&")
+  .option('-m, --match <pattern>', 'Pattern to match against', '.+')
+  .option('-f, --flags <flags>', 'Pattern to match against', '')
+  .option('-r, --replace <pattern>', 'Replacement pattern', '$&')
   .option(
-    "-t, --transformations <array>",
-    "Array of transformations to be applied in order",
-    "[]",
+    '-t, --transformations <array>',
+    'Array of transformations to be applied in order',
+    '[]',
   )
-  .option("-R, --recursive", "Perform recursive rename")
+  .option('-R, --recursive', 'Perform recursive rename')
   .parse(process.argv);
 
 const { match, flags, replace, transformations, recursive } = commander;
