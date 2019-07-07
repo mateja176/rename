@@ -1,25 +1,45 @@
-import { zip } from 'ramda';
-import { Transformations } from '../models';
+import { last, zip } from 'ramda';
+import { Transformations, TransformationsArray } from '../models';
 
-const transform = (replacement: string) => (
+type Replacer = Parameters<String['replace']>[1];
+
+const transformMatch = (transformations?: TransformationsArray) => (
+  match: string,
+) => {
+  if (transformations && transformations.length) {
+    return transformations.reduce(
+      (transformedMatch, transformation) => transformedMatch[transformation](),
+      match,
+    );
+  } else {
+    return match;
+  }
+};
+
+export const transform = (replacement: string) => (
   transformations: Transformations,
-) => (find: string, ...config: string[]) => {
-  const [wholeString] = config.slice(-1);
+): Replacer => (match, ...args) => {
+  const wholeString = last(args);
+  const transformedWholeString = transformMatch(transformations['$-1'])(
+    wholeString,
+  );
 
-  const matches = config.slice(0, -2);
+  const transformedMatch = transformMatch(transformations['$&'])(match);
 
-  const transformedMatches = zip(matches, transformations).map(
-    ([find, transformation]) => find[transformation](),
+  const matches = args.slice(0, -2);
+
+  const transformedMatches = matches.map((match, i) =>
+    transformMatch(transformations[`$${i}`])(match),
   );
 
   const replacementResult = replacement
-    .replace(/\$0/g, wholeString)
-    .replace(/\$&/g, find)
+    .replace(/\$0/g, transformedWholeString)
+    .replace(/\$&/g, transformedMatch)
     .replace(/\$(\d)/g, (_, groupNumber) => {
-      const find = transformedMatches[groupNumber - 1];
+      const transformedCurrentMatch = transformedMatches[groupNumber - 1];
 
-      if (find) {
-        return find;
+      if (transformedCurrentMatch) {
+        return transformedCurrentMatch;
       } else {
         throw new Error(`'${groupNumber}' does not represent a captured group number from 1 to '${
           matches.length
@@ -31,5 +51,3 @@ Captured groups '${matches}'`);
 
   return replacementResult;
 };
-
-export default transform;
