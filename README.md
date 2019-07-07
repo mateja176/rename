@@ -4,7 +4,7 @@
 
 ## Usage
 
-`npm i -g mytee306/rename`
+`npm i -g mateja176/rename`
 
 `rename --help`
 
