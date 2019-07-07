@@ -8,7 +8,7 @@
     "test:watch": "jest --watch",
     "build": "tsc",
     "lint": "tslint",
-    "rename": "cd playground && ../src/rename -m '(.+).js' -r '$1.ts' && cd .."
+    "rename": "cd playground && ../src/rename -f '(.+).js' -r '$1.ts' && cd .."
   },
   "bin": {
     "rename": "./dist/rename.js"

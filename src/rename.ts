@@ -2,12 +2,11 @@
 
 import * as commander from 'commander';
 import * as fs from 'fs-extra'; // fs throws when node types are unavailable in the current directory
-import { parseTransformations } from './utils';
-import { transform } from './utils';
+import { parseTransformations, transform } from './utils';
 
 commander
-  .option('-m, --match <pattern>', 'Pattern to match against', '.+')
-  .option('-f, --flags <flags>', 'Pattern to match against', '')
+  .option('-f, --find <pattern>', 'Pattern to find against', '.+')
+  .option('--flags <flags>', 'Pattern to find against', '')
   .option('-r, --replace <pattern>', 'Replacement pattern', '$&')
   .option(
     '-t, --transformations <array>',
@@ -17,7 +16,7 @@ commander
   .option('-R, --recursive', 'Perform recursive rename')
   .parse(process.argv);
 
-const { match, flags, replace, transformations, recursive } = commander;
+const { find, flags, replace, transformations, recursive } = commander;
 
 const currentDirectory = process.cwd();
 
@@ -25,7 +24,7 @@ const rename = (currentDirectory: string) => (node: string) =>
   fs.rename(
     `${currentDirectory}/${node}`,
     `${currentDirectory}/${node.replace(
-      new RegExp(match, flags),
+      new RegExp(find, flags),
       transform(replace)(transformations),
     )}`,
   );

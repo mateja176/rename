@@ -1,6 +1,6 @@
 # Rename
 
-🖉 Script for recursively renaming files and folders 
+🖉 Script for recursively renaming files and folders
 
 ## Usage
 
@@ -13,26 +13,27 @@
 ### Rename all '.js' files to '.ts' files in the current directory
 
 ```sh
-rename --match '(.+).js' --replace '$1.ts'
+rename --find '(.+).js' --replace '$1.ts'
 ```
 
 ### Rename all '.js' files to '.ts' files recursively, starting with the current directory
 
 ```sh
-rename --match '(.+).js' --replace '$1.ts' --recursive
+rename --find '(.+).js' --replace '$1.ts' --recursive
 ```
 
-*Be careful when using this command however it can easily be undone by it's inverse*
+_Be careful when using this command however it can easily be undone by it's inverse_
 
 ```sh
-rename --match '(.+).ts' --replace '$1.js' --recursive
+rename --find '(.+).ts' --replace '$1.js' --recursive
 ```
+
 ## Transformers
 
 ### Available transformers
 
 ```ts
-"toUpperCase" | "toLowerCase" | "trim" | "trimLeft" | "trimRight"
+'toUpperCase' | 'toLowerCase' | 'trim' | 'trimLeft' | 'trimRight';
 ```
 
 ### Examples
@@ -44,7 +45,7 @@ rename --transformations trim
 ```
 
 ```sh
-rename --match '(.+)(\.ts)' --replace '$1$2' --transformations trim,slice
+rename --find '(.+)(\.ts)' --replace '$1$2' --transformations trim,slice
 ```
 
 #### Lower casing file names
