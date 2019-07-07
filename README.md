@@ -1,6 +1,10 @@
 # Rename
 
-🖉 Script for recursively renaming files and folders
+🖉 Script for renaming and recursively renaming files and folders
+
+## To do
+
+Add `--depth` option to be used in conjunction with the recursive flag
 
 ## Usage
 
@@ -10,23 +14,13 @@
 
 ## Examples
 
-### Rename all '.js' files to '.ts' files in the current directory
+### Rename all '.js' files to '.ts' files in the src directory
 
 ```sh
-rename --find '(.+).js' --replace '$1.ts'
+rename --path src --find '(.+)\.js' --replace '$1.ts' --recursive
 ```
 
-### Rename all '.js' files to '.ts' files recursively, starting with the current directory
-
-```sh
-rename --find '(.+).js' --replace '$1.ts' --recursive
-```
-
-_Be careful when using this command however it can easily be undone by it's inverse_
-
-```sh
-rename --find '(.+).ts' --replace '$1.js' --recursive
-```
+_Be careful when using the `--recursive` flag. It can affect many assets at once and you may find it difficult if not impossible to undo a recursive rename in cases where the rename was informationally destructive_
 
 ## Transformers
 
@@ -36,20 +30,18 @@ rename --find '(.+).ts' --replace '$1.js' --recursive
 'toUpperCase' | 'toLowerCase' | 'trim' | 'trimLeft' | 'trimRight';
 ```
 
-### Examples
-
 #### Trimming file names
 
 ```sh
-rename --transformations trim
+rename --find '.+' --replace '$&' --transformations '{ "$&": ["trim"] }' --recursive
 ```
 
 ```sh
-rename --find '(.+)(\.ts)' --replace '$1$2' --transformations trim,slice
+rename --find '(.+)(\.ts)' --replace '$1$2' --transformations '{ "$1": ["trim"] }"
 ```
 
 #### Lower casing file names
 
 ```sh
-rename --transformations toLowerCase,slice
+rename --find '.+' --replace '$&' --transformations '{ "$&": ["toLowerCase"] }'
 ```
